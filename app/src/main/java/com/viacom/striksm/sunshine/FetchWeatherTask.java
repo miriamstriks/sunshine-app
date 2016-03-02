@@ -1,6 +1,11 @@
 package com.viacom.striksm.sunshine;
 
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +17,7 @@ import java.net.URL;
 /**
  * Created by striksm on 3/2/16.
  */
-public class FetchWeatherTask {
+public class FetchWeatherTask extends AsyncTask<String, Void, String> {
 
     private static final String TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -20,12 +25,27 @@ public class FetchWeatherTask {
     BufferedReader reader = null;
     String forecastJsonStr = null;
 
-    public String execute() {
+    @Override
+    protected String doInBackground(String... params) {
         try {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
-            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("http")
+                    .authority("api.openweathermap.org")
+                    .appendPath("data")
+                    .appendPath("2.5")
+                    .appendPath("forecast")
+                    .appendPath("daily")
+                    .appendQueryParameter("q", "11367,US")
+                    .appendQueryParameter("mode", "json")
+                    .appendQueryParameter("units", "metric")
+                    .appendQueryParameter("cnt", "7")
+                    .appendQueryParameter("appid", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+
+            URL url = new URL(builder.build().toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -72,6 +92,13 @@ public class FetchWeatherTask {
             }
         }
 
+        try {
+            Log.d(TAG, "doInBackground: forecastJson =\n" + (new JSONObject(forecastJsonStr)).toString(2));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return forecastJsonStr;
+
     }
 }
