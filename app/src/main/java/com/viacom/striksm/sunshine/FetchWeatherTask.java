@@ -110,7 +110,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             }
 
             forecastJsonStr = buffer.toString();
-            Log.v(TAG, "Forecast string: " + forecastJsonStr);
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -235,9 +234,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             resultStrs[i] = day + " - " + description + " - " + highAndLow;
         }
 
-        for (String s : resultStrs) {
-            Log.v(TAG, "Forecast entry: " + s);
-        }
         return resultStrs;
 
     }

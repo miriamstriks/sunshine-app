@@ -1,5 +1,6 @@
 package com.viacom.striksm.sunshine;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +42,7 @@ public class ForecastFragment extends Fragment {
     private static final String TAG = ForecastFragment.class.getSimpleName();
 
     private ArrayAdapter<String> mForecastAdapter;
+    public  static final String FORECAST_DETAIL_TEXT = "forecast detail";
 
     public ForecastFragment() {
     }
@@ -93,6 +97,15 @@ public class ForecastFragment extends Fragment {
 
         ListView listview = (ListView) rootView.findViewById(R.id.listview_forecast);
         listview.setAdapter(mForecastAdapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String forecast = mForecastAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(FORECAST_DETAIL_TEXT, forecast);
+                startActivity(intent);
+            }
+        });
 
         setHasOptionsMenu(true);
 
@@ -106,8 +119,10 @@ public class ForecastFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] strings) {
             super.onPostExecute(strings);
-            mForecastAdapter.clear();
-            mForecastAdapter.addAll(strings);
+            if(strings != null) {
+                mForecastAdapter.clear();
+                mForecastAdapter.addAll(strings);
+            }
         }
 
         @Override

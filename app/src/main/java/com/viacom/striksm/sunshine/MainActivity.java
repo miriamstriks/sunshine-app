@@ -10,6 +10,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+/*        //show icon
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher2);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
